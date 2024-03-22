@@ -4,16 +4,13 @@ import sys
 # Initialize Pygame
 pygame.init()
 
-# Constants
 WIDTH, HEIGHT = 300, 300
 LINE_WIDTH = 3
 XO_WIDTH = 10
 BOARD_ROWS, BOARD_COLS = 3, 3
 SQUARE_SIZE = WIDTH // BOARD_COLS
 
-# Colors
 WHITE = (255, 255, 255)
-DARK_GRAY = (36, 36, 36)
 RED = (176, 2, 13)
 BLUE = (2, 47, 184)
 CYAN = (3, 122, 145)
