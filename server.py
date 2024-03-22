@@ -24,18 +24,35 @@ pygame.display.set_caption("Tic Tac Toe")
 # Initialize the board
 board = [['' for _ in range(BOARD_COLS)] for _ in range(BOARD_ROWS)]
 
-def draw_board():
+def draw_board(current_player):
     screen.fill(LIGHT_CYAN)
+
+    # Draw banner
+    pygame.draw.rect(screen, CYAN, (0, 0, WIDTH, 50))
+
+    # Display message on banner
+    font = pygame.font.Font(None, 30)
+    turn_text = font.render("Player {}'s turn".format(current_player), True, WHITE)
+    text_rect = turn_text.get_rect(center=(WIDTH // 2, 25))
+    screen.blit(turn_text, text_rect)
+
     for row in range(BOARD_ROWS):
         for col in range(BOARD_COLS):
-            pygame.draw.rect(screen, CYAN, (col * SQUARE_SIZE, row * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE), LINE_WIDTH)
+            pygame.draw.rect(screen, CYAN, (col * SQUARE_SIZE, row * SQUARE_SIZE + 50, SQUARE_SIZE, SQUARE_SIZE), LINE_WIDTH)
             if board[row][col] == 'X':
-                pygame.draw.line(screen, RED, (col * SQUARE_SIZE + 20, row * SQUARE_SIZE + 20),
-                                 ((col + 1) * SQUARE_SIZE - 20, (row + 1) * SQUARE_SIZE - 20), XO_WIDTH)
-                pygame.draw.line(screen, RED, ((col + 1) * SQUARE_SIZE - 20, row * SQUARE_SIZE + 20),
-                                 (col * SQUARE_SIZE + 20, (row + 1) * SQUARE_SIZE - 20), XO_WIDTH)
+                pygame.draw.line(screen, RED, (col * SQUARE_SIZE + 20, row * SQUARE_SIZE + 70),
+                                 ((col + 1) * SQUARE_SIZE - 20, (row + 1) * SQUARE_SIZE + 50 - 20), XO_WIDTH)
+                pygame.draw.line(screen, RED, ((col + 1) * SQUARE_SIZE - 20, row * SQUARE_SIZE + 70),
+                                 (col * SQUARE_SIZE + 20, (row + 1) * SQUARE_SIZE + 50 - 20), XO_WIDTH)
             elif board[row][col] == 'O':
-                pygame.draw.circle(screen, BLUE, (col * SQUARE_SIZE + SQUARE_SIZE // 2, row * SQUARE_SIZE + SQUARE_SIZE // 2), SQUARE_SIZE // 2 - 20, XO_WIDTH)
+                pygame.draw.circle(screen, BLUE, (col * SQUARE_SIZE + SQUARE_SIZE // 2, row * SQUARE_SIZE + SQUARE_SIZE // 2 + 50), SQUARE_SIZE // 2 - 20, XO_WIDTH)
+
+    pygame.display.update()
+
+# Adjust the height of the screen to accommodate the banner
+HEIGHT += 50
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+
 
 def check_winner():
     for row in range(BOARD_ROWS):
@@ -95,7 +112,6 @@ def main():
     screen.blit(title_text, text_rect)
     screen.blit(start_text, start_rect)
     pygame.display.flip()
-    # pygame.display.update()
 
     while True:
         for event in pygame.event.get():
@@ -107,7 +123,7 @@ def main():
                     game_started = True
                 else:
                     mouseX, mouseY = pygame.mouse.get_pos()
-                    clicked_row = mouseY // SQUARE_SIZE
+                    clicked_row = (mouseY - 50) // SQUARE_SIZE
                     clicked_col = mouseX // SQUARE_SIZE
                     if board[clicked_row][clicked_col] == '':
                         board[clicked_row][clicked_col] = current_player
@@ -124,7 +140,7 @@ def main():
                             game_over = True
 
         if game_started:  # Draw the board only after the first click
-            draw_board()
+            draw_board(current_player)
             pygame.display.update()
 
 if __name__ == "__main__":
